@@ -14,7 +14,7 @@ MAGENTA = Color(255, 0, 255)
 
 ImageRGB = NDArray[Shape['* height, * width, 3 rgb'], UInt8]
 ImageBGR = NDArray[Shape['* height, * width, 3 bgr'], UInt8]
-Image = Union[ImageRGB, ImageBGR]
+Image = Union[ImageRGB,]
 
 
 Coordinate = TypeVar('Coordinate', int, float)
@@ -23,6 +23,7 @@ Coordinate = TypeVar('Coordinate', int, float)
 class Frame:
     number_image: int
     image: Image
+    name: str
 
 
 @dataclass

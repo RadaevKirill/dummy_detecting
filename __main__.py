@@ -1,33 +1,26 @@
-import cv2
-import numpy as np
-import streamlit as st
+import time
+from pathlib import Path
 
 from example.person_detector import PersonDetector
-from example.painter import OpenCVPainter
+from example.decoder import OpenCVDecoder
+from example.saver import Saver
 
 
 class Example:
-    def __init__(
-            self,
-            detector,
-            painter
-    ) -> None:
+    def __init__(self, detector, decoder, saver, folder: Path) -> None:
         self._detector = detector
-        self._painter = painter
+        self._decoder = decoder
+        self._saver = saver
+        self._folder = folder
 
     def run(self) -> None:
-        # for frame in self._decoder.decode():
-        #     detections = self._detector.detect(image=frame.image)
-        #     self._saver.save(frame=frame, detections=detections)
-        #     self._visualizer.visualize(image=frame.image, detections=detections)
-
-        img_file_buffer = st.camera_input("Take a picture")
-
-        if img_file_buffer is not None:
-            image = cv2.imdecode(np.frombuffer(img_file_buffer.getvalue(), np.uint8), cv2.IMREAD_COLOR)
-            detections = self._detector.detect(image=image)
-            image_with_det = self._painter.paint(image=image, detections=detections)
-            st.image(image_with_det)
+        while True:
+            if len([self._folder.rglob('*.jpg')]) > 0:
+                for frame in self._decoder.decode():
+                    detections = self._detector.detect(image=frame.image)
+                    self._saver.save(detections=detections, name=frame.name)
+            else:
+                time.sleep(2)
 
 
 if __name__ == '__main__':
@@ -44,5 +37,7 @@ if __name__ == '__main__':
                                     width=512,
                                     score_threshold=0.6,
                                     nms_threshold=0.4),
-            painter=OpenCVPainter()
+            decoder=OpenCVDecoder(Path('./images')),
+            saver=Saver(Path('./images')),
+            folder=Path('./images')
             ).run()
