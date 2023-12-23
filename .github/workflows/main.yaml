@@ -25,7 +25,7 @@ jobs:
 
     - name: Run tests
       run: |
-        python -m pytest
+        BASE_DIR=$(pwd) pytest ./test/test_saver.py
 
     - name: Deploy to FastAPI
       env:
