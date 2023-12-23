@@ -14,7 +14,7 @@ def test_saver():
         label_as_str='person'
     )]
     name = 'file.jpg'
-    Path(f'{os.path.abspath(os.curdir)}/images/file.jpg').touch()
+    open('./images/file.jpg', 'w+')
     
     sut = Saver(Path('./images')).save(name, dets)
 
