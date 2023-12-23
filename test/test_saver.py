@@ -13,11 +13,11 @@ def test_saver():
         label_as_str='person'
     )]
     name = 'file.jpg'
-    open('../images/file.jpg', 'w+')
+    open('./images/file.jpg', 'w+')
 
-    sut = Saver(Path('../images')).save(name, dets)
+    sut = Saver(Path('./images')).save(name, dets)
 
-    assert Path('../images/file.txt').exists()
-    assert Path('../images/file.txt').is_file()
+    assert Path('./images/file.txt').exists()
+    assert Path('./images/file.txt').is_file()
 
-    Path('../images/file.txt').unlink()
+    Path('./images/file.txt').unlink()
