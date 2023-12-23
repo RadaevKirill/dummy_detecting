@@ -13,7 +13,7 @@ def test_saver():
         label_as_str='person'
     )]
     name = 'file.jpg'
-    open('./images/file.jpg', 'w+')
+    Path('./images/file.jpg').touch()
 
     sut = Saver(Path('./images')).save(name, dets)
 
