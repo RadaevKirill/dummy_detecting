@@ -26,10 +26,3 @@ jobs:
     - name: Run tests
       run: |
         BASE_DIR=$(pwd) pytest ./test/test_saver.py
-
-    - name: Deploy to FastAPI
-      env:
-        FASTAPI_HOST: ${{ secrets.FASTAPI_HOST }}
-        FASTAPI_PORT: ${{ secrets.FASTAPI_PORT }}
-      run: |
-        uvicorn your_app:app --host $FASTAPI_HOST --port $FASTAPI_PORT --reload
