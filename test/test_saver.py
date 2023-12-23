@@ -13,8 +13,8 @@ def test_saver():
         label_as_str='person'
     )]
     name = 'file.jpg'
-    Path('./images/file.jpg').touch()
-
+    Path(f'{os.path.abspath(os.curdir)}/images/file.jpg').touch()
+    
     sut = Saver(Path('./images')).save(name, dets)
 
     assert Path('./images/file.txt').exists()
