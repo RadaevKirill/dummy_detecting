@@ -51,8 +51,6 @@ class OpenvinoAdapterMixin:
 
         logging.info('Creating inference engine')
         self.__core = Core()
-        # проверяем наличие нужного нам устройства
-        # если устройства нет, то используем CPU
         device = device.upper() if device.upper() in [x.upper() for x in self.__core.available_devices] else 'CPU'
 
         logging.info(f'Use model: {model}')
@@ -72,7 +70,6 @@ class OpenvinoAdapterMixin:
         )
         self.__infer_request = self.__compiled_model.create_infer_request()
 
-        # настройки, относящиеся к препроцессингу изображений
         self.__input_type: type = input_type_mapper[input_type.lower()]
         self.__input_dims_transpose_list: List[int] = \
             list(map(int, input_dims_order.lower().translate(input_dims_mapper)))
@@ -80,7 +77,6 @@ class OpenvinoAdapterMixin:
         self._height: int = height
         self._width: int = width
 
-        # настройки, относящиеся к постпроцессингу результата
         self._score_threshold: float = score_threshold
         self._nms_threshold: float = nms_threshold
 
@@ -98,25 +94,14 @@ class OpenvinoAdapterMixin:
         ).astype(self.__input_type)
 
     def __infer(self, data: Blob) -> Any:
-        """Инференс модели.
-        Почему инференс выполнен через метод класса InferRequest, а не через метод `__call__` скомпилированной модели?
-        Ответ: https://github.com/openvinotoolkit/open_model_zoo/issues/3492#issuecomment-1178538455
-        """
         self.__infer_request.infer([data])
-        # tmp = self.__infer_request.results.values()
-        # print(np.array(list(tmp)[0]).shape)
-        # return self.__infer_request.get_output_tensor(1)
         return np.array(list(self.__infer_request.results.values())[0])
 
     @abstractmethod
     def _post_processing(self, output: Any, image_height: int, image_width: int) -> Any:
-        """Постобработка результатов детекции.
-        Разные модели имеют разные выходные данные, поэтому наследнику необходимо реализовать этот метод.
-        """
         raise NotImplementedError
 
     def _predict(self, image: Image) -> Any:
-        """Предсказания результатов детекции на изображении."""
         input_ = self.__pre_processing(image=image)
         output = self.__infer(data=input_)
         result = self._post_processing(output=output, image_height=image.shape[0], image_width=image.shape[1])
