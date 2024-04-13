@@ -15,6 +15,7 @@ from example.models import Image
 input_type_mapper = {'uint8': np.uint8, 'float32': np.float32}
 input_dims_mapper = {ord('b'): '0', ord('c'): '1', ord('h'): '2', ord('w'): '3'}
 Blob = NDArray[Shape['*, *, *, *'], Any]
+perfomance_types = ['THROUGHPUT', 'LATENCY']
 
 
 class OpenvinoAdapterMixin:
@@ -34,7 +35,7 @@ class OpenvinoAdapterMixin:
             score_threshold: float,
             nms_threshold: float,
     ):
-        if performance_hint not in ['THROUGHPUT', 'LATENCY']:
+        if performance_hint not in perfomance_types:
             raise ValueError('Performance hint should be one of ["LATENCY", "THROUGHPUT"]')
 
         if input_type.lower() not in input_type_mapper.keys():
