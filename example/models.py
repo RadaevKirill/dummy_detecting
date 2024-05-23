@@ -1,4 +1,5 @@
 import time
+from math import pi, sqrt
 from collections import namedtuple
 from dataclasses import dataclass, field
 from typing import Dict, Generic, List, Tuple, TypeVar, Union
@@ -50,6 +51,18 @@ class Point(Generic[Coordinate]):
 
 Points = List[Point[Coordinate]]
 
+@dataclass
+class Circle(Generic[Coordinate]):
+    center: Point[Coordinate]
+    radius: Coordinate
+
+    @property
+    def area(self) -> Coordinate:
+        return pi * (self.radius ** 2)
+
+    @property
+    def circumference(self) -> Coordinate:
+        return 2 * pi * self.radius
 
 @dataclass
 class Box(Generic[Coordinate]):
