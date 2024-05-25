@@ -1,7 +1,7 @@
 import time
 from collections import namedtuple
 from dataclasses import dataclass, field
-from typing import Dict, Generic, List, Tuple, TypeVar, Union
+from typing import Callable, Dict, Generic, List, Tuple, TypeVar, Union
 
 import numpy as np
 from nptyping import Float32, Int32, NDArray, Shape, UInt8
@@ -58,12 +58,23 @@ class Rectangle(Generic[Coordinate]):
     d: Point[Coordinate]
 
     @property
+    def side_lengths(self) -> [float, float, float, float]:
+        calc_side_length: Callable[[Point, Point], float] = lambda p1, p2 : ((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2) ** (1/2) 
+        return [
+            calc_side_length(self.a, self.b),
+            calc_side_length(self.b, self.c),
+            calc_side_length(self.c, self.d),
+            calc_side_length(self.d, self.a)
+        ]
+
+    @property
     def area(self) -> Coordinate:
-        return self.a * self.b
+        [A,B,C,D] = self.side_lengths
+        return A  * B
 
     @property
     def perimeter(self) -> Coordinate:
-        return self.a + self.b + self.c + self.d
+        return sum(self.side_lengths)
 
 @dataclass
 class Box(Generic[Coordinate]):
