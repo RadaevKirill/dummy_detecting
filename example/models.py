@@ -50,6 +50,20 @@ class Point(Generic[Coordinate]):
 
 Points = List[Point[Coordinate]]
 
+@dataclass
+class Rectangle(Generic[Coordinate]):
+    a: Point[Coordinate]
+    b: Point[Coordinate]
+    c: Point[Coordinate]
+    d: Point[Coordinate]
+
+    @property
+    def area(self) -> Coordinate:
+        return self.a * self.b
+
+    @property
+    def perimeter(self) -> Coordinate:
+        return self.a + self.b + self.c + self.d
 
 @dataclass
 class Box(Generic[Coordinate]):
