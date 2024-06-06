@@ -1,4 +1,5 @@
 import time
+from math import pi, sqrt
 from collections import namedtuple
 from dataclasses import dataclass, field
 from typing import Callable, Dict, Generic, List, Tuple, TypeVar, Union
@@ -75,6 +76,19 @@ class Rectangle(Generic[Coordinate]):
     @property
     def perimeter(self) -> Coordinate:
         return sum(self.side_lengths)
+@dataclass
+class Circle(Generic[Coordinate]):
+    center: Point[Coordinate]
+    radius: Coordinate
+
+    @property
+    def area(self) -> Coordinate:
+        return pi * (self.radius ** 2)
+
+    @property
+    def circumference(self) -> Coordinate:
+        return 2 * pi * self.radius
+
 
 @dataclass
 class Box(Generic[Coordinate]):
